@@ -1,6 +1,6 @@
 # Minimal Viable Creative File Taxonomy (MVCFT)
 
-**v1.0 - one-page specification**
+**v1.1 - one-page specification**
 
 ---
 
@@ -13,7 +13,8 @@ This taxonomy must be:
 * **Searchable on commodity OSes (Windows, macOS, Linux)**
 * **Usable by teams, not just individuals**
 * **Stable over decades**
-* **Free of “final”, “v2”, “latest”, etc.**
+* **Readable outside its original folder structure**
+* **Free of ambiguous labels such as “final”, “new”, “latest”, etc.**
 
 ---
 
@@ -74,26 +75,51 @@ Visibility is **orthogonal** to object type.
 
 Exactly **one** domain per object.
 
+The domain field may contain additional descriptive words after the controlled domain term, joined with hyphens.
+
+Examples:
+
+```
+Personal
+Public-Graphic-Design
+Client-Mueller-Brand
+```
+
+The first word must remain one of the controlled domain terms:
+`Personal`, `Public`, or `Client`.
+
 ---
 
 ## 4. Naming schema (strict order)
 
 ```
-Domain.ObjectType.Context.Identifier[.Qualifier].Extension
+YYYY-MM-DD_Domain_ObjectType_Context_Identifier_Qualifier_vNN.ext
 ```
+
+### Separator rules
+
+| Separator | Use                                  |
+| --------- | ------------------------------------ |
+| `_`       | separates major fields               |
+| `-`       | separates words inside a field       |
+| `.`       | reserved for the file extension only |
 
 ### Required fields
 
-* `Domain` → visibility
-* `ObjectType` → File / Work / Asset
+* `YYYY-MM-DD` → ISO date
+* `Domain` → visibility, optionally extended with hyphenated descriptive words
+* `ObjectType` → `File` / `Work` / `Asset`
 * `Context` → project, theme, or functional grouping
 * `Identifier` → human-readable, stable name
-* `Extension` → actual file format
+* `vNN` → zero-padded version number
+* `ext` → actual file format
 
-### Optional
+### Optional field
 
-* `Qualifier` → medium, platform, encoding, or variant
+* `Qualifier` → medium, platform, encoding, variant, export target, or production state
   (never emotional states like “final”)
+
+If no qualifier is needed, omit it rather than inserting filler text.
 
 ---
 
@@ -103,85 +129,154 @@ Domain.ObjectType.Context.Identifier[.Qualifier].Extension
 
 * Groups related things
 * Reused across many objects
-* Examples: `Illustration`, `Experiment`, `Sketch`
+* May describe a project, study area, campaign, experiment, or functional grouping
+* Examples: `Illustration`, `Experiment`, `Sketch`, `Logo-Research`
 
 ### Identifier
 
 * Names the thing itself
 * Stable over time
-* Examples: `CRTMelt`, `SecondTree`, `HortonStrahler`
+* Should still make sense outside the original folder
+* Examples: `CRTMelt`, `SecondTree`, `Horton-Strahler`
 
 ---
 
-## 6. Dates (explicitly optional)
+## 6. Dates
 
-Dates are **not part of the core taxonomy**.
+Dates are part of the canonical naming schema.
 
-Allowed **only** if:
-
-* the date is semantically meaningful (e.g. daily generative output)
-* or required for external systems
-
-Format (if used):
+Format:
 
 ```
-YYYYMMDD
+YYYY-MM-DD
 ```
 
-Dates go **after Identifier**, never before.
+Dates go **first** because this keeps files chronologically sortable in simple file browsers, ZIP archives, backup folders, and exported directory listings.
+
+Use the date that is most meaningful for the object:
+
+* creation date for original material
+* publication date for published works
+* delivery date for client deliveries
+* scan date for scans
+* export date for generated exports
+
+Do not use vague date words such as:
+
+* `today`
+* `yesterday`
+* `new`
+* `recent`
 
 ---
 
-## 7. Canonical examples (these are my own files)
+## 7. Versioning
+
+Versioning is allowed only in controlled form:
+
+```
+v01
+v02
+v03
+```
+
+Version numbers must be:
+
+* zero-padded
+* monotonic
+* mechanical, not emotional
+* placed before the file extension
+
+Forbidden:
+
+* `final`
+* `final-final`
+* `latest`
+* `new`
+* `v2-final`
+* `really-final`
+
+A released, printed, or delivered state should be expressed through the `Qualifier` field, not through emotional version labels.
+
+Examples:
+
+```
+2026-06-16_Public_Work_Experiment_SecondTree_RGB_v01.png
+2026-06-16_Client-Mueller-Brand_Work_Brand-Campaign_Hero-Visual_Print_v03.pdf
+```
+
+---
+
+## 8. Canonical examples
 
 ### Asset
 
 ```
-Public.Asset.Experiment.CRTMelt.BSL.bsl
+2026-06-16_Public_Asset_Experiment_CRTMelt_BSL_v01.bsl
 ```
 
 ### Editable file
 
 ```
-Personal.File.Experiment.SecondTree.BlackInk.bkd
+2026-06-16_Personal_File_Experiment_SecondTree_BlackInk_v01.bkd
 ```
 
 ### Published illustration
 
 ```
-Public.Work.Experiment.SecondTree.RGB.png
+2026-06-16_Public_Work_Experiment_SecondTree_RGB_v01.png
 ```
 
 ### Client delivery
 
 ```
-Client.Work.BrandCampaign.HeroVisual.Print.pdf
+2026-06-16_Client_Work_Brand-Campaign_Hero-Visual_Print_v01.pdf
+```
+
+### Public graphic-design research note
+
+```
+2026-06-16_Public-Graphic-Design_File_Toolmakers_Research-Notes_Source-List_v01.md
+```
+
+### Client logo asset
+
+```
+2026-06-16_Client-Mueller-Brand_Asset_Logo_Primary-Sign_SVG_v03.svg
 ```
 
 ---
 
-## 8. Explicitly forbidden patterns
+## 9. Explicitly forbidden patterns
 
-* ❌ `final`, `v2`, `new`, `latest`
+* ❌ `final`, `new`, `latest`, `really-final`
+* ❌ unpadded versions such as `v2`
 * ❌ software names as primary classifiers
-* ❌ dates as leading identifiers
+* ❌ extra dots inside the filename
+* ❌ spaces inside filenames
 * ❌ mixed object types (`WorkFile`, `FinalAsset`)
 * ❌ emotional or subjective qualifiers
+* ❌ filenames that only make sense inside one folder
+* ❌ names that differ only by letter case
 
 ---
 
-## 9. Semantic invariants (must always hold)
+## 10. Semantic invariants (must always hold)
 
 * A **File** may produce Works
 * A **Work** may be derived from Files
 * An **Asset** never becomes a Work
 * Exporting a File creates a **Work**, not another File
 * Visibility does not change object type
+* Versioning does not change object type
+* File extension does not override semantic classification
 
 ---
 
-## 10. Mental model (one sentence)
+## 11. Mental model (one sentence)
 
 > **Files are for doing, Works are for showing, Assets are for making.**
 
+---
 
+Text edit finalized with chatgpt.com

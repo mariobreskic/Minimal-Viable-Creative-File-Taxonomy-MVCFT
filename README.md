@@ -1,5 +1,28 @@
 # Minimal Viable Creative File Taxonomy (MVCFT)
-This is a minimal, software-agnostic taxonomy to name creative things in a way that is searchable, team-safe, and semantically sound I use.
+
+This is a minimal, software-agnostic taxonomy for naming creative files in a way that is searchable, team-safe, semantically sound, and durable across operating systems, archives, and long-term storage.
+
+The current canonical filename structure is:
+
+```text
+YYYY-MM-DD_Domain_ObjectType_Context_Identifier_Qualifier_vNN.ext
+```
+
+Separator logic:
+
+```text
+_   separates major fields
+-   separates words inside a field
+.   is reserved for the file extension
+```
+
+Example:
+
+```text
+2026-06-16_Public_Work_Illustration_SecondTree_RGB_v01.png
+```
+
+---
 
 ## About linguistic bugs in the system
 
@@ -9,68 +32,119 @@ In the creative world, people often say **“work file”** and **“exported wo
 
 Examples:
 
-* “Here’s the work file of my illustration” → they mean the `.bkd` / `.psd` master
-* “Here’s the exported work” → they mean the `.png` / `.jpg` ready-to-publish image
+* “Here’s the work file of my illustration” → they mean the `.bkd` / `.psd` / `.ai` master file
+* “Here’s the exported work” → they mean the `.png` / `.jpg` / `.pdf` ready-to-publish output
 
 **The problem:**
 
-* **Both are called ‘work’ in casual speech**, but functionally they are different.
-* OS, archives, and intelligent management need a **single source of truth**: *what is this file for?*
+* **Both are called “work” in casual speech**, but functionally they are different.
+* Operating systems, archives, teams, and asset-management systems need a **single source of truth**: *what is this file for?*
 
 This confusion leads to filenames like:
 
-```
+```text
 20260127-workfile-second-tree.png
 ```
 
-* You can’t tell: is it editable? reusable? meant for consumption?
-* You have **mixed axes**: identity, type, and intent all mashed into one string.
+The filename does not clearly say whether the object is:
 
-That’s the “bug”: **language encourages ambiguity in naming**, which breaks search, categorization, and long-term archival.
+* editable
+* reusable
+* meant for presentation
+* meant for publication
+* only an export
+* only a working file
+
+It mixes identity, type, intent, date, and format into one ambiguous string.
+
+That is the “bug”: **ordinary language encourages ambiguity in naming**, and that ambiguity breaks search, categorization, handover, and long-term archival.
 
 ---
 
-### How my taxonomy fixes it
+## How MVCFT fixes it
 
-It separates **three dimensions clearly**:
+MVCFT separates the relevant dimensions clearly:
 
-| Axis   | Examples                                   | Notes                |
-| ------ | ------------------------------------------ | -------------------- |
-| Intent | Personal / Public / Client                 | Who the work is for  |
-| Type   | File / Work / Asset                        | Function, not format |
-| Domain | Illustration / Typography / Layout / Mixed | Category of work     |
+| Field        | Examples                                             | Meaning                                             |
+| ------------ | ---------------------------------------------------- | --------------------------------------------------- |
+| `Date`       | `2026-06-16`                                         | Chronological anchor                                |
+| `Domain`     | `Personal`, `Public`, `Client`                       | Visibility or ownership context                     |
+| `ObjectType` | `File`, `Work`, `Asset`                              | Function, not format                                |
+| `Context`    | `Illustration`, `Typography`, `Layout`, `Experiment` | Project, theme, or functional grouping              |
+| `Identifier` | `SecondTree`, `CRTMelt`, `Horton-Strahler`           | Stable human-readable name                          |
+| `Qualifier`  | `RGB`, `Print`, `BlackInk`, `SVG`                    | Medium, variant, export target, or production state |
+| `Version`    | `v01`, `v02`, `v03`                                  | Controlled mechanical versioning                    |
+| `Extension`  | `.bkd`, `.psd`, `.png`, `.pdf`                       | Actual file format                                  |
 
 So instead of ambiguous “work file,” we can now say:
 
-```
-Personal.File.Illustration.SecondTree.bkd
+```text
+2026-06-16_Personal_File_Illustration_SecondTree_BlackInk_v01.bkd
 ```
 
-vs
+vs.
 
+```text
+2026-06-16_Public_Work_Illustration_SecondTree_RGB_v01.png
 ```
-Public.Work.Illustration.SecondTree.png
+
+vs.
+
+```text
+2026-06-16_Public_Asset_Experiment_CRTMelt_BSL_v01.bsl
 ```
+
+In this system:
 
 * **File** = editable master, kept for working in
-* **Work** = expressive output, meant to be consumed
-* **Asset** = reusable tool, meant to be applied in other works
+* **Work** = expressive output, meant to be seen, read, watched, heard, or otherwise consumed
+* **Asset** = reusable tool or component, meant to be applied in other files or works
 
-Now every filename communicates the **function clearly**, not just “sounds like a work.”
-
----
-
-#### Why this matters
-
-* **Windows search** can immediately filter by Type → never accidentally grab a master when you want a published piece.
-* **Metadata / Bridge** can store technique, brushes, dates, and provenance → richness without cluttering the filename.
-* **Archives / long-term storage**: every item has a deterministic, unambiguous identity.
+Now every filename communicates the **function of the object**, not merely what it vaguely “sounds like.”
 
 ---
 
-#### TL;DR
+## Why this matters
 
-> The “linguistic bug” is: people call *everything* a “work file,” conflating **function** (File vs Work) with **intent** and **format**.
-> This taxonomy fixes it by explicitly separating **Intent / Type / Domain / Identifier**, so the filename is *unambiguous*.
+* **Search becomes safer:** filtering for `_File_`, `_Work_`, or `_Asset_` immediately narrows the result by function.
+* **Teams can exchange files without guessing:** the filename already explains whether something is editable, publishable, or reusable.
+* **Archives become more stable:** each item keeps a readable identity even outside its original folder.
+* **Metadata can stay metadata:** technique, provenance, notes, brushes, and production details can live in Bridge, sidecars, manifests, or documentation without overloading the filename.
+* **The extension remains honest:** the final dot belongs only to the actual file format.
 
+---
 
+## Forbidden patterns
+
+Avoid:
+
+```text
+final
+final-final
+new
+latest
+v2-final
+really-final
+```
+
+Avoid extra dots inside the filename:
+
+```text
+Public.Work.Illustration.SecondTree.RGB.v01.png
+```
+
+Prefer underscores and hyphens:
+
+```text
+2026-06-16_Public_Work_Illustration_SecondTree_RGB_v01.png
+```
+
+---
+
+## TL;DR
+
+> The “linguistic bug” is that people call too many different creative objects a “work file,” conflating **function**, **visibility**, **format**, and **intent**.
+>
+> MVCFT fixes this by separating `Date`, `Domain`, `ObjectType`, `Context`, `Identifier`, `Qualifier`, `Version`, and `Extension`, so the filename remains unambiguous, searchable, and durable.
+
+Text edit finalized with chatgpt.com
